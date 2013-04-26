@@ -122,7 +122,7 @@ func (rr *RoundRobin) get(wait bool) (resource Resource, err error) {
                 if resource, err = rr.waitForCreate(); err != nil {
                     fmt.Println("create new resource failed")
                     rr.size--
-                    continue
+                    return nil, err
                 }
                 fmt.Println("create new resource success")
                 return resource, nil
