@@ -37,12 +37,15 @@ func (rr *ChannelPool) Get() (Resource, error) {
 }
 
 func (rr *ChannelPool) GetWithTimeout(timeout time.Duration) (Resource, error) {
-    select {
-    case rr.ch <- 1:
-        return rr.get()
-    case <-time.After(timeout):
-        fmt.Println("Time out after", timeout)
-        return nil, TIME_OUT
+    if timeout > 0 {
+        select {
+        case rr.ch <- 1:
+            return rr.get()
+        case <-time.After(timeout):
+            return nil, TIME_OUT
+        }
+    } else {
+        return rr.Get()
     }
 }
 
