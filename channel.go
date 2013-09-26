@@ -30,9 +30,6 @@ func (rr *ChannelPool) Open(factory Factory) {
 
 func (rr *ChannelPool) Get() (Resource, error) {
     rr.ch <- 1
-    rr.Lock()
-    defer rr.Unlock()
-
     return rr.get()
 }
 
@@ -50,6 +47,9 @@ func (rr *ChannelPool) GetWithTimeout(timeout time.Duration) (Resource, error) {
 }
 
 func (rr *ChannelPool) get() (Resource, error) {
+    rr.Lock()
+    defer rr.Unlock()
+
     for {
         select {
         case fw := <-rr.resources:
