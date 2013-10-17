@@ -87,6 +87,7 @@ func (rr *ChannelPool) Put(resource Resource) {
 
     if resource.IsClosed() {
         fmt.Println("Resource is closed when releasing, discarded now")
+        go resource.Close()
         rr.size--
         return
     }
